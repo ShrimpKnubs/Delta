@@ -1,0 +1,81 @@
+{
+  "system": {
+    "name": "Full Moon Turning Point Detection System (RL-D3QN)",
+    "version": "5.0.0-D3QN",
+    "description": "RL Dueling Double DQN using ConvPool+T1 base model and V4 features"
+  },
+  "detection": {
+    "confidence_threshold": 0.6,
+    "min_confirmations": 0,
+    "use_rule_based": false,
+    "combine_ml_and_rules": false
+  },
+  "model_training": {
+    "random_state": 42,
+    "train_years": null,
+    "use_standard_scaler": false,
+    "use_minmax_scaler": true,
+    "test_split_ratio": 0.2,
+    "model_params": {
+      "sequence_length": 60,
+      "embed_dim": 64,
+      "conv_filters": [24, 24, 24],
+      "conv_kernels": [3, 7, 15],
+      "conv_dropout": 0.25,       
+      "pool_size": 2,              
+      "num_heads": 4,
+      "ff_dim": 128,
+      "num_transformer_blocks": 1,
+      "transformer_dropout": 0.25, 
+      "dense_units": [64],        
+      "dense_dropout": 0.3        
+    },
+    "validation_split": 0.2
+  },
+  "d3qn_training": {                 
+      "gamma": 0.99,                 
+      "learning_rate": 1e-4,         
+      "optimizer": "AdamW",          
+      "weight_decay": 1e-4,          
+      "gradient_clipnorm": 1.0,      
+      "buffer_size": 5000,          
+      "batch_size": 8,              
+      "epsilon_start": 1.0,         
+      "epsilon_end": 0.05,          
+      "epsilon_decay_steps": 100000, 
+      "target_update_freq": 1000,    
+      "learning_starts": 1000,      
+      "log_interval": 50,           
+      "save_interval": 200        
+  },
+  "rl_training": {
+      "max_episode_steps": 1000,    
+      "initial_offset_range": [0, 500],
+      "reward_lookahead_k": 2,
+      "reward_config": {
+            "hit_top": 15.0,
+            "hit_bottom": 15.0,
+            "close_hit_decay": 0.5,
+            "wrong_direction": -10.0,
+            "false_positive": -6.0,
+            "missed_tp_penalty": -5.0,
+            "missed_close_tp_decay": 0.6,
+            "correct_inaction": 0.05
+      }
+     
+  },
+  "backtesting": {
+    "initial_capital": 100000,
+    "position_size_pct": 2,
+    "use_stop_loss": true,
+    "stop_loss_atr_multiple": 2.0,
+    "take_profit_atr_multiple": 3.0,
+    "max_holding_days": 10,
+    "min_win_rate": 55
+  },
+  "logging": {
+    "log_level": "INFO",
+    "save_predictions": true, 
+    "save_feature_importance": false 
+  }
+}
